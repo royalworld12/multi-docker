@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t iamshaikh/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true iamshaikh/react-test npm run test
+
+after_success:
+  - docker build -t iamshaikh/multi-client ./client
+  - docker build -t iamshaikh/multi-nginx  ./nginx
+  - docker build -t iamshaikh/mutli-server ./server
+  - docker build -t iamshaikh/multi-worker ./worker
